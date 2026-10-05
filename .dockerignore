@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+*.md
+gem-merchant-cursor-spec.txt
+.env
+.env.local
+coverage

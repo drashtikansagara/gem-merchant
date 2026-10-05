@@ -1,0 +1,2573 @@
+PREMIUM GEM STRATEGY BOARD GAME
+COMPLETE PRODUCT, UX, VISUAL, GAME ENGINE, MULTIPLAYER AND DEPLOYMENT SPECIFICATION
+
+============================================================
+1. PROJECT OBJECTIVE
+============================================================
+
+Build a polished browser-based multiplayer strategy board game inspired by the classic gem-collection and development-card genre.
+
+The application should feel like a premium physical tabletop game converted into a modern desktop web experience.
+
+The goal is NOT to build:
+- a generic React card UI
+- an admin dashboard
+- a basic multiplayer demo
+- a collection of HTML cards
+- a mobile-first game
+- a casino interface
+
+The goal is to create a visually rich, intuitive, responsive and highly polished digital tabletop experience.
+
+The player should feel that:
+
+"I am sitting at a premium game table with physical cards, gemstones and opponents."
+
+The game should be simple to understand but visually sophisticated.
+
+IMPORTANT IP / ORIGINALITY REQUIREMENT
+
+Do not copy:
+- commercial board-game logos
+- original artwork
+- original card illustrations
+- exact card layouts
+- trademarked names
+- trademarked branding
+- scans/photos of physical cards
+- proprietary UI assets
+
+Use an original game identity.
+
+The game can use similar high-level mechanics such as:
+- collecting colored resources
+- purchasing development cards
+- permanent discounts
+- reserved cards
+- special characters/achievements
+- victory points
+- turn-based play
+
+But the visual identity, terminology, artwork and implementation should be original.
+
+If implementing a specific existing game's rules or card data, only use data that is legally available for the project. Keep the engine configurable so the rules and card dataset can be replaced independently from the UI.
+
+============================================================
+2. WORKING GAME IDENTITY
+============================================================
+
+Use the temporary working title:
+
+GEM MERCHANT
+
+Tagline:
+
+Build your fortune. Master the market.
+
+The name can be changed later.
+
+Create the entire application so the game name is configured centrally rather than hardcoded throughout the codebase.
+
+Example:
+
+export const GAME_CONFIG = {
+  name: "Gem Merchant",
+  tagline: "Build your fortune. Master the market.",
+};
+
+============================================================
+3. TARGET PLATFORM
+============================================================
+
+Primary:
+Desktop browser.
+
+Target resolutions:
+- 1280 x 720
+- 1366 x 768
+- 1440 x 900
+- 1920 x 1080
+
+Priority:
+1. 1366 x 768
+2. 1440 x 900
+3. 1920 x 1080
+
+The entire game should feel comfortable on a normal laptop.
+
+Do not design the game assuming a 4K monitor.
+
+Do not require vertical scrolling during normal gameplay.
+
+============================================================
+4. TECHNOLOGY
+============================================================
+
+Use:
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn/ui only where appropriate
+- Framer Motion
+- MongoDB
+- MongoDB native driver or Mongoose, choosing one and using it consistently
+- WebSocket
+- Zod
+- Node.js
+- npm
+
+Use strict TypeScript.
+
+Avoid unnecessary libraries.
+
+Prefer CSS/SVG for game visuals instead of importing huge image libraries.
+
+The game engine must not depend on React.
+
+============================================================
+5. APPLICATION ARCHITECTURE
+============================================================
+
+Use:
+
+Browser
+   |
+   | HTTPS
+   | WSS
+   |
+   v
+Nginx
+   |
+   +------------------+
+   |                  |
+   v                  v
+Next.js              WebSocket
+Application           Server
+   |                  |
+   +--------+---------+
+            |
+            v
+         MongoDB
+
+Single VPS deployment initially.
+
+Do not introduce Kubernetes, ECS, EKS or complex cloud infrastructure.
+
+The architecture should allow scaling later.
+
+============================================================
+6. APPLICATION ROUTES
+============================================================
+
+/
+Landing page.
+
+/lobby
+Create or join game.
+
+/game/[roomCode]
+Game table.
+
+/how-to-play
+Game tutorial.
+
+Optional later:
+/profile
+/history
+/settings
+
+============================================================
+7. LANDING PAGE
+============================================================
+
+The landing page should immediately communicate the game's visual identity.
+
+Layout:
+
+-------------------------------------------------------
+                    GEM MERCHANT
+
+             Build your fortune.
+             Master the market.
+
+            [ CREATE GAME ]
+
+             [ JOIN GAME ]
+
+                How to Play
+
+        ◇     ◆      ◈      ◇
+-------------------------------------------------------
+
+Use a beautiful tabletop background.
+
+Display:
+- floating gemstones
+- subtle card silhouettes
+- soft lighting
+- subtle particles
+- elegant typography
+
+Do not overload the page with animation.
+
+Animation should feel premium.
+
+============================================================
+8. CREATE GAME
+============================================================
+
+User selects:
+
+Players
+
+[ 2 ] [ 3 ] [ 4 ]
+
+Default:
+2 players.
+
+Then:
+
+Game visibility
+
+Private
+
+Create:
+
+[ CREATE GAME ]
+
+After creation:
+
+GAME CREATED
+
+Room Code
+
+A7KQ9D
+
+[ COPY CODE ]
+
+[ COPY INVITE LINK ]
+
+============================================================
+9. JOIN GAME
+============================================================
+
+Input:
+
+ROOM CODE
+
+[ A7KQ9D ]
+
+[ JOIN GAME ]
+
+If the user opens:
+
+/game/A7KQ9D
+
+automatically load the room.
+
+============================================================
+10. PLAYER IDENTITY
+============================================================
+
+Initially support guest players.
+
+When joining:
+
+Choose your name
+
+[ Player Name ]
+
+Choose avatar
+
+Use original simple avatar symbols or SVG avatars.
+
+Generate a stable guest session ID.
+
+Store the session securely.
+
+Do not require registration for the first version.
+
+============================================================
+11. LOBBY
+============================================================
+
+Lobby structure:
+
+------------------------------------------------
+GEM MERCHANT
+
+ROOM A7KQ9D
+
+PLAYERS
+
+◆ Player One             READY
+◇ Player Two             READY
+
+[ START GAME ]
+
+Waiting for players...
+------------------------------------------------
+
+Show:
+- player list
+- player avatars
+- ready state
+- room code
+- copy invite
+- leave room
+
+Host can start when requirements are satisfied.
+
+============================================================
+12. BOARD DESIGN
+============================================================
+
+The game board should feel like a physical tabletop.
+
+Conceptual composition:
+
+-------------------------------------------------------
+GAME HEADER
+-------------------------------------------------------
+OPPONENT AREA
+-------------------------------------------------------
+ACHIEVEMENT / NOBLE AREA
+-------------------------------------------------------
+TIER 3 MARKET
+-------------------------------------------------------
+TIER 2 MARKET
+-------------------------------------------------------
+TIER 1 MARKET
+-------------------------------------------------------
+BANK
+-------------------------------------------------------
+PLAYER AREA
+-------------------------------------------------------
+
+Do not literally divide everything into boxes.
+
+The visual design should create hierarchy through spacing, shadows and alignment.
+
+============================================================
+13. TABLETOP BACKGROUND
+============================================================
+
+The board background should resemble a luxury gaming table.
+
+Use:
+- dark charcoal
+- deep brown
+- subtle grain
+- very subtle vignette
+
+Do not use:
+- bright gradients
+- noisy textures
+- random patterns
+- distracting illustrations
+
+The background must support card readability.
+
+============================================================
+14. DESIGN SYSTEM
+============================================================
+
+Create centralized design tokens.
+
+Example:
+
+const theme = {
+  colors: {
+    background: "#151412",
+    surface: "#211F1B",
+    ivory: "#EFE6D6",
+    gold: "#C9A45C",
+    ruby: "#B9444A",
+    sapphire: "#3F6FA3",
+    emerald: "#4E8A68",
+    amber: "#C49542",
+    onyx: "#33312E",
+    pearl: "#D9D2C5",
+  },
+};
+
+Do not scatter arbitrary colors through components.
+
+============================================================
+15. TYPOGRAPHY
+============================================================
+
+Use two typography styles.
+
+Display font:
+Elegant serif.
+
+Used for:
+- game title
+- card points
+- victory title
+- section headings
+
+UI font:
+Clean sans-serif.
+
+Used for:
+- buttons
+- labels
+- player names
+- resource counts
+- tooltips
+- instructions
+
+Do not use more than two font families.
+
+============================================================
+16. RESOURCE SYSTEM
+============================================================
+
+Use seven resource types:
+
+RUBY
+SAPPHIRE
+EMERALD
+AMBER
+ONYX
+PEARL
+ROYAL
+
+Royal is a special/wildcard resource.
+
+Each resource needs:
+- unique icon
+- color
+- name
+- short label
+- CSS class
+- accessibility label
+- animation
+- token component
+- compact icon
+
+============================================================
+17. GEM ICON DESIGN
+============================================================
+
+Do not use emoji as the primary visual.
+
+Create custom SVG icons.
+
+Each gem should have a recognizable silhouette.
+
+Ruby:
+diamond-like cut stone.
+
+Sapphire:
+hexagonal cut.
+
+Emerald:
+rectangular gemstone.
+
+Amber:
+faceted teardrop.
+
+Onyx:
+dark geometric stone.
+
+Pearl:
+circular pearl.
+
+Royal:
+ornate multi-faceted gem.
+
+The icon must remain recognizable at:
+- 16px
+- 24px
+- 32px
+- 48px
+
+============================================================
+18. PHYSICAL GEM TOKEN DESIGN
+============================================================
+
+Tokens should look like physical game pieces.
+
+Each token should use:
+- circular shape
+- inner ring
+- subtle gradient
+- material texture
+- shadow
+- highlight
+
+Avoid excessive 3D effects.
+
+Token visual:
+
+       ____________
+     /              \
+    |       ◆        |
+    |                |
+    |      RUBY      |
+     \              /
+       ------------
+
+============================================================
+19. TOKEN STATES
+============================================================
+
+Default:
+Normal physical appearance.
+
+Hover:
+- scale 1.08
+- translateY(-4px)
+- shadow increase
+
+Selected:
+- translateY(-8px)
+- gold outline
+- subtle pulse
+
+Disabled:
+- opacity 0.35
+- slight grayscale
+
+Flying:
+Animate from bank to player using Framer Motion.
+
+============================================================
+20. CARD DESIGN
+============================================================
+
+Cards are the most important visual component.
+
+Each card must look like a physical premium card.
+
+Ratio:
+approximately 3:4.
+
+Example:
+
++-------------------------+
+| I                 3     |
+|                         |
+|                         |
+|        GEM ART          |
+|                         |
+|                         |
+|        ◆ RUBY           |
+|                         |
+| COST                    |
+| ◆ ◆       ◇             |
+|                         |
++-------------------------+
+
+============================================================
+21. CARD ANATOMY
+============================================================
+
+Each card contains:
+
+1. Tier
+2. Victory points
+3. Artwork
+4. Permanent bonus
+5. Cost
+6. Optional internal identifier for debugging only
+
+Never show internal IDs to users.
+
+============================================================
+22. CARD TIER VISUALS
+============================================================
+
+Tier 1:
+- simple border
+- clean artwork
+- muted frame
+- low point values
+
+Tier 2:
+- richer border
+- more ornate artwork
+- slightly stronger gold accent
+
+Tier 3:
+- premium frame
+- ornate corners
+- richer artwork
+- stronger gold accent
+- larger point display
+
+Each tier should immediately feel different.
+
+============================================================
+23. CARD ARTWORK SYSTEM
+============================================================
+
+Create original artwork using SVG.
+
+Possible visual themes:
+
+Tier 1:
+- raw gemstone
+- simple ring
+- merchant tools
+- small jewel
+
+Tier 2:
+- ornate bracelet
+- gemstone chest
+- decorated ring
+- jewel collection
+
+Tier 3:
+- royal crown
+- ceremonial necklace
+- legendary gemstone
+- treasure artifact
+
+Keep artwork centered.
+
+Artwork should never interfere with cost or point information.
+
+============================================================
+24. CARD CORNERS
+============================================================
+
+Give cards subtle ornamental corners.
+
+Use:
+- small geometric SVG
+- thin gold line
+- tiny decorative mark
+
+Do not reproduce existing board game ornamentation.
+
+============================================================
+25. CARD POINT DISPLAY
+============================================================
+
+Points should be immediately visible.
+
+Example:
+
+                         ✦ 5
+
+Use a serif font.
+
+Large enough to see without zooming.
+
+============================================================
+26. CARD BONUS DISPLAY
+============================================================
+
+At the bottom center show the permanent bonus icon.
+
+Example:
+
+◆
+
+Tooltip:
+Permanent Ruby bonus
+
+The bonus should remain visible when the card is shown in the player's collection.
+
+============================================================
+27. CARD COST DISPLAY
+============================================================
+
+Use actual gem icons.
+
+Example:
+
+◆ x3     ◇ x2     ● x1
+
+Avoid long text.
+
+On hover, show:
+
+Cost
+
+Ruby      3
+Sapphire  2
+Onyx      1
+
+============================================================
+28. AFFORDABILITY
+============================================================
+
+When the player has enough resources:
+
+Card gets:
+- subtle gold glow
+- slight elevation
+- cursor pointer
+
+Optional small indicator:
+CAN BUY
+
+Do not add huge green borders.
+
+The visual treatment should remain premium.
+
+============================================================
+29. CARD HOVER
+============================================================
+
+On hover:
+- card moves up 8px
+- scale 1.03
+- shadow increases
+
+Show an expanded information panel only when useful.
+
+Do not make every hover open a huge tooltip.
+
+============================================================
+30. CARD SELECTED
+============================================================
+
+Selected card:
+- gold outline
+- elevation
+- subtle glow
+- action panel appears
+
+Example:
+
+Selected: Royal Jeweller
+
+[ BUY CARD ]     [ CANCEL ]
+
+============================================================
+31. CARD PURCHASE ANIMATION
+============================================================
+
+When purchased:
+
+Market Card
+      |
+      v
+Player Collection
+
+The actual card should animate toward the player's collection.
+
+Then:
+
++3
+
+appears near the score.
+
+The player's bonus counter should animate.
+
+============================================================
+32. CARD RESERVATION
+============================================================
+
+When reserved:
+
+Market
+  |
+  v
+Reserved Area
+
+Add a bookmark-style visual marker.
+
+Do not create a disruptive modal.
+
+============================================================
+33. PLAYER CARD COLLECTION
+============================================================
+
+Owned cards should be displayed compactly.
+
+Example:
+
+YOUR DEVELOPMENTS
+
+[◆] [◆] [◇] [●] [◆] [◇] [●]
+
+Hover expands the card.
+
+Click opens a larger view if necessary.
+
+Show summary:
+
+7 cards
+12 points
+
+============================================================
+34. PLAYER RESOURCE PANEL
+============================================================
+
+Player's resources should be prominent but compact.
+
+Example:
+
+YOUR RESOURCES
+
+◆ 4    ◇ 2    ● 3    ■ 1    ○ 2    ✦ 0
+
+Each resource shows:
+- icon
+- count
+
+Hover shows name.
+
+============================================================
+35. RESOURCE LIMIT INDICATOR
+============================================================
+
+If the game has a maximum resource limit, show feedback when approaching the limit.
+
+Example:
+
+Resources 8 / 10
+
+Do not constantly display unnecessary warnings.
+
+Only emphasize when relevant.
+
+============================================================
+36. OPPONENT PANEL
+============================================================
+
+Opponent information:
+
++----------------------------+
+| ◆ Player Two         14    |
+|                            |
+| Cards     7                |
+| Reserved  1                |
+|                            |
+| ◆ 3  ◇ 2  ● 4  ■ 1        |
++----------------------------+
+
+Use avatar.
+
+Highlight current player.
+
+Do not reveal information that the rules should keep hidden.
+
+============================================================
+37. TURN SYSTEM UI
+============================================================
+
+At all times the player should know:
+- whose turn
+- what action is available
+- whether they are waiting
+
+Your turn:
+
+YOUR TURN
+Choose your action
+
+Opponent turn:
+
+PLAYER TWO'S TURN
+Waiting...
+
+Use subtle animation.
+
+============================================================
+38. ACTION SYSTEM
+============================================================
+
+Primary actions:
+
+TAKE GEMS
+BUY CARD
+RESERVE CARD
+
+Only show actions appropriate to the current state.
+
+Buttons should be:
+- clear
+- large enough
+- keyboard accessible
+- visually consistent
+
+============================================================
+39. TAKE GEMS FLOW
+============================================================
+
+When TAKE GEMS is selected:
+
+Highlight available resources.
+
+Selected tokens appear in a temporary tray:
+
+SELECTED
+
+◆  ◇
+
+[ CONFIRM ]
+
+If the selection is invalid, show a concise explanation.
+
+Example:
+
+Choose a valid token combination.
+
+Do not use browser alerts.
+
+============================================================
+40. BUY CARD FLOW
+============================================================
+
+Player clicks a card.
+
+System checks:
+- player's turn
+- card exists
+- card is available
+- player can afford it
+- payment is valid
+
+If valid:
+
+[ BUY CARD ]
+
+If invalid:
+
+You need 2 more Ruby.
+
+Never simply disable the card without explaining why when the user deliberately tries to interact with it.
+
+============================================================
+41. RESERVE CARD FLOW
+============================================================
+
+Click:
+
+RESERVE CARD
+
+Then:
+- validate turn
+- validate reservation limit
+- validate card availability
+- move card into reserved area
+- update market
+- pass turn
+
+============================================================
+42. ACHIEVEMENT / NOBLE SYSTEM
+============================================================
+
+Use original characters.
+
+Each character:
+- portrait
+- name
+- requirement
+- reward
+
+Example:
+
++---------------------+
+|                     |
+|      PORTRAIT       |
+|                     |
+|   Lady Aurelia      |
+|                     |
+|   ◆ 3   ◇ 3   ● 3  |
+|                     |
+|      +3 POINTS      |
++---------------------+
+
+When unlocked:
+- glow
+- sound
+- animation
+- notification
+
+============================================================
+43. ACHIEVEMENT ANIMATION
+============================================================
+
+When player qualifies:
+
+Achievement unlocked
+
+Lady Aurelia
+
++3 points
+
+Character card moves toward the player.
+
+Do not block the board for several seconds.
+
+Animation should be around 1-2 seconds.
+
+============================================================
+44. GAME LOG
+============================================================
+
+Provide a small expandable activity feed.
+
+Examples:
+
+Player One bought Emerald Artisan
+Player Two reserved Royal Crown
+Player One gained 2 gems
+Player Two claimed Lady Aurelia
+
+Keep it subtle.
+
+============================================================
+45. GAME INFORMATION
+============================================================
+
+Top bar:
+
+GEM MERCHANT
+
+ROOM A7KQ9D
+
+Turn 17
+
+Settings
+
+Do not overcrowd the header.
+
+============================================================
+46. SETTINGS
+============================================================
+
+Small settings menu:
+
+Sound       ON/OFF
+Animations  ON/OFF
+Theme       Default
+Leave Game
+
+Do not make settings complicated.
+
+============================================================
+47. SOUND DESIGN
+============================================================
+
+Create subtle sounds for:
+- token selected
+- token collected
+- card selected
+- card bought
+- card reserved
+- achievement
+- turn changed
+- victory
+
+Avoid:
+- loud casino sounds
+- repetitive music
+- distracting effects
+
+Provide mute control.
+
+============================================================
+48. ANIMATION PRINCIPLES
+============================================================
+
+Animations should communicate state.
+
+Use:
+- transform
+- opacity
+- scale
+- spring movement
+
+Avoid:
+- huge rotations
+- excessive particles
+- constant movement
+- long animations
+
+Normal interaction:
+150-350ms.
+
+Major event:
+500-1500ms.
+
+============================================================
+49. PARTICLES
+============================================================
+
+Use particles only for:
+- achievement
+- victory
+- special milestone
+
+Keep them subtle.
+
+Never run background particle animations continuously.
+
+============================================================
+50. GAME END
+============================================================
+
+When game ends:
+
+Dim board.
+
+Slight blur.
+
+Center victory panel.
+
+Example:
+
+                         ✦
+
+                      VICTORY
+
+                      PLAYER ONE
+
+                     18 POINTS
+
+             --------------------
+
+             Development Cards
+                     13
+
+             Achievements
+                      5
+
+             --------------------
+
+             [ PLAY AGAIN ]
+
+             [ RETURN TO LOBBY ]
+
+For the other player:
+
+GAME OVER
+
+Player One finished with 18 points.
+
+Do not make the losing screen insulting.
+
+============================================================
+51. REMATCH
+============================================================
+
+After a game:
+
+[ PLAY AGAIN ]
+
+should create a new game using the same players where possible.
+
+Do not force players to recreate the lobby manually.
+
+============================================================
+52. GAME ENGINE
+============================================================
+
+The game engine is the most important technical component.
+
+It must be independent from React.
+
+Create:
+
+game-engine/
+
+Game.ts
+Player.ts
+Card.ts
+Token.ts
+Noble.ts
+
+actions/
+  takeTokens.ts
+  buyCard.ts
+  reserveCard.ts
+
+rules/
+  validation.ts
+  scoring.ts
+  victory.ts
+  nobles.ts
+
+events/
+  events.ts
+
+============================================================
+53. GAME STATE
+============================================================
+
+Example:
+
+interface GameState {
+  id: string;
+
+  status:
+    | "WAITING"
+    | "PLAYING"
+    | "FINISHED";
+
+  players: PlayerState[];
+
+  currentPlayerId: string;
+
+  market: {
+    tier1: Card[];
+    tier2: Card[];
+    tier3: Card[];
+  };
+
+  nobles: Noble[];
+
+  bank: TokenBank;
+
+  turnNumber: number;
+
+  winnerId?: string;
+}
+
+============================================================
+54. PLAYER STATE
+============================================================
+
+Example:
+
+interface PlayerState {
+  id: string;
+
+  name: string;
+
+  avatar: string;
+
+  tokens: Record<ResourceType, number>;
+
+  cards: Card[];
+
+  reservedCards: Card[];
+
+  achievements: Noble[];
+
+  points: number;
+}
+
+============================================================
+55. CARD MODEL
+============================================================
+
+Example:
+
+interface Card {
+  id: string;
+
+  tier: 1 | 2 | 3;
+
+  points: number;
+
+  bonus: ResourceType;
+
+  cost: Partial<Record<ResourceType, number>>;
+
+  artwork: string;
+}
+
+Artwork should reference an internal asset key.
+
+Example:
+
+artwork: "ruby-crown"
+
+============================================================
+56. GAME ACTIONS
+============================================================
+
+Use:
+
+type GameAction =
+  | TakeTokensAction
+  | BuyCardAction
+  | ReserveCardAction;
+
+Example:
+
+type BuyCardAction = {
+  type: "BUY_CARD";
+  cardId: string;
+  payment: Partial<Record<ResourceType, number>>;
+};
+
+============================================================
+57. SERVER VALIDATION
+============================================================
+
+Every action must go through:
+
+validateAction(
+  gameState,
+  playerId,
+  action
+)
+
+Validation:
+- player exists
+- game active
+- player turn
+- action valid
+- card exists
+- card available
+- payment valid
+- resources sufficient
+- reservation valid
+- rules satisfied
+
+============================================================
+58. GAME EVENTS
+============================================================
+
+Return events from the game engine.
+
+Example:
+
+type GameEvent =
+  | {
+      type: "TOKENS_TAKEN";
+      playerId: string;
+      tokens: ResourceType[];
+    }
+  | {
+      type: "CARD_PURCHASED";
+      playerId: string;
+      cardId: string;
+    }
+  | {
+      type: "CARD_RESERVED";
+      playerId: string;
+      cardId: string;
+    }
+  | {
+      type: "ACHIEVEMENT_CLAIMED";
+      playerId: string;
+      achievementId: string;
+    }
+  | {
+      type: "TURN_CHANGED";
+      playerId: string;
+    }
+  | {
+      type: "GAME_FINISHED";
+      winnerId: string;
+    };
+
+These events should drive frontend animations.
+
+============================================================
+59. MULTIPLAYER
+============================================================
+
+Use WebSockets.
+
+Flow:
+
+Browser
+  |
+  | action
+  v
+WebSocket Server
+  |
+  v
+Game Engine
+  |
+  v
+Validation
+  |
+  v
+New State
+  |
+  v
+MongoDB
+  |
+  v
+Broadcast
+  |
+  +----------+
+  |          |
+  v          v
+Player A   Player B
+
+============================================================
+60. WEBSOCKET EVENTS
+============================================================
+
+Client -> Server:
+
+JOIN_GAME
+READY
+START_GAME
+GAME_ACTION
+LEAVE_GAME
+PING
+
+Server -> Client:
+
+GAME_STATE
+PLAYER_JOINED
+PLAYER_LEFT
+TURN_CHANGED
+GAME_EVENT
+GAME_FINISHED
+ERROR
+PONG
+
+============================================================
+61. AUTHORITATIVE SERVER
+============================================================
+
+Never allow the client to determine:
+- points
+- token counts
+- card ownership
+- winner
+- current turn
+- noble eligibility
+
+The client only requests actions.
+
+The server decides.
+
+============================================================
+62. RECONNECTION
+============================================================
+
+Handle:
+- refresh
+- temporary network loss
+- browser sleep
+- laptop wake
+- duplicate tab
+- server restart
+
+On reconnect:
+
+session
+   |
+player
+   |
+game
+   |
+current state
+   |
+render
+
+============================================================
+63. HEARTBEAT
+============================================================
+
+Implement WebSocket heartbeat.
+
+Detect disconnected clients.
+
+Do not immediately remove a player from an active game.
+
+Give a short reconnect grace period.
+
+Example:
+
+CONNECTED
+   |
+DISCONNECTED
+   |
+RECONNECTING
+   |
+CONNECTED
+
+============================================================
+64. MONGODB DATA MODEL
+============================================================
+
+Use MongoDB as the persistence layer.
+
+Recommended collections:
+
+users
+games
+gameMoves
+gameResults
+sessions
+
+For the first version, the core collections are:
+
+games
+gameMoves
+gameResults
+
+A user collection can be introduced when accounts are added.
+
+============================================================
+65. GAMES COLLECTION
+============================================================
+
+Example document:
+
+{
+  _id: ObjectId,
+  roomCode: "A7KQ9D",
+  status: "PLAYING",
+  hostPlayerId: "player-123",
+  currentPlayerId: "player-456",
+  players: [
+    {
+      id: "player-123",
+      name: "Player One",
+      avatar: "gem-1",
+      connected: true,
+      joinedAt: Date
+    },
+    {
+      id: "player-456",
+      name: "Player Two",
+      avatar: "gem-2",
+      connected: true,
+      joinedAt: Date
+    }
+  ],
+  state: {
+    ...
+  },
+  turnNumber: 17,
+  winnerId: null,
+  createdAt: Date,
+  updatedAt: Date,
+  startedAt: Date,
+  finishedAt: null
+}
+
+Use MongoDB BSON/ObjectId appropriately.
+
+Do not expose MongoDB ObjectIds unnecessarily to the frontend.
+
+============================================================
+66. GAME MOVES COLLECTION
+============================================================
+
+Example:
+
+{
+  _id: ObjectId,
+  gameId: ObjectId,
+  playerId: "player-123",
+  actionType: "BUY_CARD",
+  payload: {
+    cardId: "ruby-artisan-01",
+    payment: {
+      RUBY: 2,
+      SAPPHIRE: 1
+    }
+  },
+  turnNumber: 17,
+  createdAt: Date
+}
+
+Store every valid action.
+
+Do not store invalid actions as successful moves.
+
+Invalid actions can be logged separately if needed.
+
+============================================================
+67. GAME RESULTS COLLECTION
+============================================================
+
+Example:
+
+{
+  _id: ObjectId,
+  gameId: ObjectId,
+  winnerId: "player-123",
+  players: [
+    {
+      playerId: "player-123",
+      name: "Player One",
+      points: 18,
+      rank: 1
+    },
+    {
+      playerId: "player-456",
+      name: "Player Two",
+      points: 15,
+      rank: 2
+    }
+  ],
+  durationSeconds: 1280,
+  createdAt: Date
+}
+
+============================================================
+68. MONGODB INDEXES
+============================================================
+
+Create indexes for:
+
+games.roomCode
+games.status
+games.updatedAt
+
+gameMoves.gameId
+gameMoves.createdAt
+
+gameResults.gameId
+
+Room code must be unique.
+
+Use a unique index on roomCode.
+
+Do not query the entire games collection for active rooms.
+
+============================================================
+69. GAME STATE PERSISTENCE
+============================================================
+
+Every valid action:
+
+validate
+   |
+apply
+   |
+persist game state
+   |
+persist move
+   |
+broadcast
+
+Use a safe persistence strategy.
+
+If possible, use MongoDB transactions for related writes when the deployment supports them.
+
+At minimum, make the server resilient to a failure between state and move persistence.
+
+Do not broadcast a state that was never successfully persisted.
+
+============================================================
+70. GAME RECOVERY
+============================================================
+
+On server startup:
+
+Find active games.
+
+Restore their state.
+
+Rebuild active game rooms.
+
+Players should be able to reconnect.
+
+Do not depend entirely on server RAM.
+
+============================================================
+71. MOVE HISTORY
+============================================================
+
+Store every valid action.
+
+This provides:
+- debugging
+- replay
+- audit
+- support investigation
+- future analytics
+
+============================================================
+72. MONGODB CONNECTION
+============================================================
+
+Create a reusable MongoDB connection module.
+
+Do not create a new database connection for every request.
+
+Use a connection pool.
+
+Keep:
+
+MONGODB_URI
+
+in environment variables.
+
+Do not expose MONGODB_URI to the browser.
+
+============================================================
+73. MONGODB DOCUMENT SIZE
+============================================================
+
+Do not allow unlimited game history inside a single game document.
+
+Keep current game state in the games collection.
+
+Keep move history in gameMoves.
+
+This prevents a game document from growing unnecessarily.
+
+============================================================
+74. SECURITY
+============================================================
+
+Implement:
+- server-side validation
+- rate limiting
+- WebSocket message validation
+- Zod schemas
+- input sanitization
+- secure cookies
+- environment variables
+- no database credentials in frontend
+- no secrets in git
+
+Do not trust room codes alone for sensitive operations.
+
+============================================================
+75. API DESIGN
+============================================================
+
+Use APIs for:
+
+POST /api/games
+GET /api/games/:roomCode
+POST /api/games/:roomCode/join
+POST /api/games/:roomCode/leave
+
+Gameplay should primarily use WebSocket messages.
+
+============================================================
+76. GAME ROOM MANAGER
+============================================================
+
+Create:
+
+GameRoomManager
+
+Responsibilities:
+- active rooms
+- players
+- WebSocket connections
+- game state
+- broadcasts
+- reconnections
+- cleanup
+
+Do not put all of this into a single server file.
+
+============================================================
+77. TESTING
+============================================================
+
+Game engine tests are mandatory.
+
+Test:
+- starting game
+- token collection
+- invalid token selection
+- card purchase
+- insufficient resources
+- discounts
+- reserved cards
+- achievements
+- turn progression
+- victory
+- edge cases
+
+============================================================
+78. MULTIPLAYER TESTING
+============================================================
+
+Test with two browser windows.
+
+Player A:
+create game.
+
+Player B:
+join.
+
+Verify:
+- both see same state
+- only current player can act
+- action appears on both clients
+- turn changes
+- reconnect works
+
+============================================================
+79. UI TESTING
+============================================================
+
+Test:
+1366x768
+1440x900
+1920x1080
+
+Verify:
+- cards readable
+- no unwanted scrolling
+- buttons accessible
+- player area visible
+- resource counts visible
+- board not clipped
+
+============================================================
+80. ACCESSIBILITY
+============================================================
+
+Do not rely solely on colors.
+
+Every resource needs:
+- icon
+- color
+- accessible name
+
+Buttons:
+- keyboard accessible
+- visible focus
+
+Cards:
+- meaningful aria-label
+
+Tokens:
+- meaningful aria-label
+
+============================================================
+81. PERFORMANCE
+============================================================
+
+Avoid rendering the entire game tree for every action.
+
+Use:
+- memoized components
+- stable keys
+- CSS transforms
+- Framer Motion layout animations
+- local derived state only where necessary
+
+Keep WebSocket payloads reasonable.
+
+Do not send unnecessary full database documents to clients.
+
+Send only the game state required by the current player.
+
+============================================================
+82. ERROR HANDLING
+============================================================
+
+Never use:
+
+alert(...)
+
+Use application-level notifications.
+
+Examples:
+
+You cannot buy this card yet.
+
+You need 2 more Ruby.
+
+It is not your turn.
+
+That card is no longer available.
+
+============================================================
+83. EMPTY STATES
+============================================================
+
+Lobby:
+
+Waiting for another player...
+
+Reserved:
+
+No reserved cards
+
+Game history:
+
+No actions yet
+
+Do not leave blank areas.
+
+============================================================
+84. LOADING STATES
+============================================================
+
+Game:
+
+Preparing your table...
+
+Connecting:
+
+Connecting to the game...
+
+Reconnecting:
+
+Connection interrupted.
+
+Reconnecting...
+
+Use subtle gem animation.
+
+============================================================
+85. DEPLOYMENT
+============================================================
+
+Single VPS.
+
+Install:
+- Node.js
+- MongoDB OR connect to a managed MongoDB service
+- Nginx
+- PM2 or Docker
+
+Recommended application architecture:
+
+Nginx
+   |
+   +--> Next.js / Node
+   |
+   +--> WebSocket Server
+
+MongoDB can run on the VPS for a small/private deployment, but a managed MongoDB deployment is preferred if backup, durability and operational simplicity are priorities.
+
+Do not introduce complex cloud infrastructure for V1.
+
+============================================================
+86. DOMAIN
+============================================================
+
+Example:
+
+game.example.com
+
+DNS:
+
+A
+game.example.com
+VPS_IP
+
+SSL:
+Let's Encrypt.
+
+Use HTTPS.
+
+WebSocket:
+
+wss://game.example.com
+
+Never use insecure WebSocket in production.
+
+============================================================
+87. ENVIRONMENT VARIABLES
+============================================================
+
+Example:
+
+MONGODB_URI=
+NEXT_PUBLIC_APP_URL=
+WS_URL=
+SESSION_SECRET=
+NODE_ENV=production
+
+Never commit secrets.
+
+Create:
+
+.env.example
+
+============================================================
+88. LOGGING
+============================================================
+
+Log:
+- game creation
+- game join
+- game start
+- invalid actions
+- WebSocket connection
+- WebSocket disconnect
+- reconnect
+- game finish
+- server errors
+- MongoDB errors
+
+Do not log sensitive information.
+
+============================================================
+89. PRODUCTION MONITORING
+============================================================
+
+Initially keep it simple.
+
+Monitor:
+- application errors
+- MongoDB errors
+- WebSocket failures
+- memory
+- CPU
+- disk
+- active games
+
+The architecture should make adding Sentry or another monitoring service later easy.
+
+============================================================
+90. DATABASE BACKUPS
+============================================================
+
+If MongoDB is hosted on the VPS:
+
+Implement:
+- regular mongodump backup
+- retention policy
+- backup storage outside the main application directory
+- restoration procedure
+
+If using managed MongoDB:
+
+Use the provider's automated backup capability.
+
+Do not assume VPS snapshots alone are sufficient.
+
+============================================================
+91. GAME DATA CONFIGURATION
+============================================================
+
+Keep card and achievement data separate from game engine logic.
+
+Example:
+
+game-data/
+  cards.ts
+  achievements.ts
+  resources.ts
+
+This makes balancing easier.
+
+============================================================
+92. CARD DATA
+============================================================
+
+Example:
+
+{
+  id: "ruby-artisan-01",
+  tier: 1,
+  points: 1,
+  bonus: "RUBY",
+  cost: {
+    SAPPHIRE: 2,
+    PEARL: 1
+  },
+  artwork: "ruby-artisan"
+}
+
+The actual card dataset should be original unless explicitly provided as licensed data.
+
+============================================================
+93. BALANCING
+============================================================
+
+Keep game data configurable.
+
+Do not hardcode:
+
+if (points === 15) ...
+
+Use:
+
+GAME_RULES.VICTORY_POINTS
+
+This allows future balancing.
+
+============================================================
+94. GAME CONFIG
+============================================================
+
+Create:
+
+GAME_RULES = {
+  minimumPlayers: 2,
+  maximumPlayers: 4,
+  victoryPoints: 15,
+  maxReservedCards: 3,
+}
+
+The exact rules should be configurable.
+
+============================================================
+95. FUTURE FEATURES
+============================================================
+
+Architect so these can be added later:
+- AI opponent
+- ranked games
+- player accounts
+- game history
+- replays
+- spectator mode
+- tournaments
+- leaderboards
+- achievements
+- custom game modes
+- private tournaments
+- matchmaking
+
+Do not implement these now.
+
+Do not over-engineer for them.
+
+============================================================
+96. AI OPPONENT
+============================================================
+
+Not required for V1.
+
+But keep game engine deterministic so an AI can later choose:
+
+GameAction
+
+without directly manipulating state.
+
+============================================================
+97. ANALYTICS
+============================================================
+
+Do not build a large analytics system initially.
+
+Basic events can later track:
+- games created
+- games completed
+- average duration
+- abandonment
+- rematches
+- popular actions
+
+Keep analytics separate from game logic.
+
+============================================================
+98. DEVELOPMENT PHASES
+============================================================
+
+PHASE 1 - VISUAL FOUNDATION
+
+Build:
+- theme
+- typography
+- tabletop
+- gems
+- tokens
+- cards
+- achievements
+- player area
+- opponent area
+
+Use mock data.
+
+No multiplayer.
+
+Goal:
+The board should already look beautiful.
+
+------------------------------------------------------------
+
+PHASE 2 - GAME ENGINE
+
+Build:
+- state
+- cards
+- tokens
+- actions
+- validation
+- scoring
+- achievements
+- victory
+
+Write tests.
+
+Goal:
+The game works without React.
+
+------------------------------------------------------------
+
+PHASE 3 - CONNECT UI TO ENGINE
+
+Connect:
+
+UI
+|
+Game engine
+|
+State
+
+Implement:
+- token selection
+- buying
+- reserving
+- turn changes
+- score updates
+
+Goal:
+A complete local game.
+
+------------------------------------------------------------
+
+PHASE 4 - MULTIPLAYER
+
+Implement:
+- room
+- WebSocket
+- lobby
+- join
+- actions
+- state synchronization
+- reconnect
+
+Goal:
+Two browsers can play together.
+
+------------------------------------------------------------
+
+PHASE 5 - MONGODB
+
+Implement:
+- game persistence
+- move history
+- recovery
+- results
+- indexes
+- backup strategy
+
+Goal:
+Games survive server restarts.
+
+------------------------------------------------------------
+
+PHASE 6 - POLISH
+
+Implement:
+- card animations
+- token animations
+- achievements
+- victory
+- sounds
+- notifications
+- hover states
+- responsive behavior
+
+Goal:
+Commercial-quality feel.
+
+------------------------------------------------------------
+
+PHASE 7 - PRODUCTION
+
+Implement:
+- Docker/PM2
+- Nginx
+- HTTPS
+- WebSocket proxy
+- MongoDB backup
+- logging
+- environment configuration
+
+Goal:
+Production-ready VPS deployment.
+
+============================================================
+99. CURSOR WORKING METHOD
+============================================================
+
+Do not generate the entire project blindly.
+
+For each phase:
+
+1. Inspect existing repository.
+2. Understand existing architecture.
+3. Create a small implementation plan.
+4. Implement.
+5. Run TypeScript checks.
+6. Run tests.
+7. Run lint.
+8. Fix issues.
+9. Visually inspect the result.
+10. Continue to the next phase.
+
+Never break working functionality while polishing another area.
+
+============================================================
+100. CURSOR DESIGN REVIEW PROMPT
+============================================================
+
+After implementing the UI, use this prompt:
+
+"Review the current game UI as a senior tabletop game designer and frontend engineer.
+
+Do not change game rules.
+
+Evaluate:
+- visual hierarchy
+- card readability
+- token recognition
+- board composition
+- spacing
+- typography
+- interaction feedback
+- hover states
+- animation
+- 1366x768 layout
+- 1440x900 layout
+- 1920x1080 layout
+
+Identify anything that feels like a generic web application.
+
+Replace generic UI patterns with tabletop-game-specific design.
+
+Do not add unnecessary decoration.
+
+The final interface should feel premium, physical and intentional."
+
+============================================================
+101. CARD-SPECIFIC CURSOR PROMPT
+============================================================
+
+"Focus exclusively on the development card system.
+
+Do not modify the game engine.
+
+Make the cards feel like premium physical tabletop cards.
+
+Implement:
+- three visual tiers
+- original SVG artwork
+- tier-specific frames
+- point badge
+- bonus icon
+- cost icons
+- physical shadows
+- subtle texture
+- hover elevation
+- selected state
+- purchasable state
+- unavailable state
+- reserved state
+- purchase animation
+- responsive sizing
+
+Test at 1366x768.
+
+Cards must remain readable.
+
+Do not use emoji as card artwork.
+
+Do not use random stock images.
+
+Do not copy another commercial board game's card design."
+
+============================================================
+102. TOKEN-SPECIFIC CURSOR PROMPT
+============================================================
+
+"Focus exclusively on the resource token system.
+
+Create original SVG gemstone tokens.
+
+Implement:
+- six resource types
+- unique silhouette
+- unique icon
+- physical token appearance
+- subtle material texture
+- hover state
+- selected state
+- disabled state
+- token count
+- tooltip
+- accessibility label
+- acquisition animation
+- return-to-bank animation
+
+Tokens should feel like physical pieces sitting on a table."
+
+============================================================
+103. BOARD-SPECIFIC CURSOR PROMPT
+============================================================
+
+"Focus exclusively on board composition.
+
+Make the complete game fit comfortably at 1366x768.
+
+Prioritize:
+1. current turn
+2. market cards
+3. player resources
+4. player cards
+5. opponent state
+6. achievements
+7. action controls
+
+Reduce decorative content before reducing important game information.
+
+The board should feel like a physical tabletop, not a dashboard."
+
+============================================================
+104. ANIMATION-SPECIFIC CURSOR PROMPT
+============================================================
+
+"Review all game animations.
+
+Animations must communicate game events.
+
+Implement:
+- token bank -> player
+- market -> player
+- market -> reserved
+- score increase
+- turn change
+- achievement claim
+- victory
+
+Keep normal interactions under 350ms.
+
+Avoid excessive animation.
+
+Never delay the player's ability to continue playing unnecessarily."
+
+============================================================
+105. MONGODB-SPECIFIC CURSOR PROMPT
+============================================================
+
+"Review the persistence architecture specifically for MongoDB.
+
+Ensure:
+- one reusable MongoDB client
+- connection pooling
+- proper indexes
+- unique roomCode index
+- active game queries are indexed
+- game state is stored in games
+- move history is stored separately in gameMoves
+- results are stored separately
+- MongoDB ObjectIds are not unnecessarily exposed to clients
+- Zod validates data entering the database
+- WebSocket actions are validated before persistence
+- game state and move persistence are handled safely
+- database errors never expose credentials or internal details
+- environment variables are used for MongoDB configuration
+
+Do not put unlimited move history into the games document.
+
+Keep the database layer separate from the game engine."
+
+============================================================
+106. FINAL QUALITY CHECK
+============================================================
+
+Before calling the project complete, verify:
+
+GAME
+
+[ ] Game starts
+[ ] Players join
+[ ] Turns work
+[ ] Tokens work
+[ ] Cards work
+[ ] Reservations work
+[ ] Bonuses work
+[ ] Achievements work
+[ ] Scoring works
+[ ] Victory works
+
+MULTIPLAYER
+
+[ ] WebSocket works
+[ ] State synchronization works
+[ ] Invalid actions rejected
+[ ] Refresh reconnects
+[ ] Temporary disconnect reconnects
+[ ] Server restart recovery works
+
+MONGODB
+
+[ ] MongoDB connection works
+[ ] Games persist
+[ ] Moves persist
+[ ] Results persist
+[ ] Room code is indexed
+[ ] Active games are indexed
+[ ] MongoDB reconnect works
+[ ] Backups documented
+[ ] Restore process documented
+
+UI
+
+[ ] Cards look premium
+[ ] Tokens look physical
+[ ] Board is readable
+[ ] Current turn obvious
+[ ] Actions obvious
+[ ] Hover states work
+[ ] Selected states work
+[ ] Disabled states work
+[ ] Animations work
+[ ] Victory screen works
+
+RESPONSIVE
+
+[ ] 1280x720
+[ ] 1366x768
+[ ] 1440x900
+[ ] 1920x1080
+
+ENGINEERING
+
+[ ] TypeScript passes
+[ ] Tests pass
+[ ] Lint passes
+[ ] Production build passes
+[ ] Environment variables documented
+[ ] Database migrations/setup documented
+[ ] Backup procedure documented
+
+DEPLOYMENT
+
+[ ] Domain configured
+[ ] HTTPS enabled
+[ ] WebSocket works over WSS
+[ ] Nginx configured
+[ ] Application restart works
+[ ] MongoDB restart/reconnect works
+[ ] Logs accessible
+
+============================================================
+107. MOST IMPORTANT PRINCIPLE
+============================================================
+
+The game should have three distinct layers:
+
+GAME RULES
+
+The game engine knows what is allowed.
+
+GAME STATE
+
+The server knows what is happening.
+
+PRESENTATION
+
+The browser makes the game beautiful and easy to play.
+
+Never mix these layers.
+
+The final result should feel like:
+
+      PHYSICAL BOARD GAME
+              +
+       MODERN WEB UI
+              +
+       REAL-TIME MULTIPLAYER
+              +
+       PREMIUM ANIMATION
+              +
+       SIMPLE CONTROLS
+
+The user should never need to think about the underlying technology.
+
+They should simply feel like they are playing a beautiful strategy board game.

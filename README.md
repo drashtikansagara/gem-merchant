@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gem Merchant
 
-## Getting Started
+Browser tabletop game for 2–4 players: collect gems, buy developments, attract nobles.
 
-First, run the development server:
+## Local development
 
 ```bash
+cp .env.example .env.local
+# SESSION_SECRET must be set. MongoDB is optional for local practice.
+npm install
+npm test
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Web: http://localhost:3100
+- WebSocket: ws://localhost:3001/ws
+- Practice table: http://localhost:3100/game/local (engine runs in the browser)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+MongoDB is required for games to survive a server restart. Start one with:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+docker compose up mongo -d
+```
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Script | Purpose |
+| --- | --- |
+| `npm run dev` | Next.js + WebSocket server |
+| `npm test` | Game engine tests |
+| `npm run typecheck` | TypeScript |
+| `npm run lint` | ESLint |
+| `npm run build` | Production Next.js build |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Rules live in `game-engine/` (no React). The WebSocket server is authoritative. The browser only requests actions. MongoDB stores `games`, `gameMoves`, and `gameResults`.
 
-## Deploy on Vercel
+## Production
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Vercel + a separate game server (Railway/Render) + MongoDB Atlas:** follow [docs/deploy.md](docs/deploy.md).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Single server:** see `docker-compose.yml`, `nginx/nginx.conf`, and `docs/backup.md`.
+
+Set `SESSION_SECRET` to a long random value. Never commit `.env.local`.
+Use HTTPS and `wss://` behind Nginx.
+
+## Originality
+
+Gem Merchant is an original game in the gem-collecting, card-building genre. It is not affiliated
+with or endorsed by the publishers of any commercial board game. The name, card prices, patrons,
+artwork and interface are original to this project; only general game mechanics (which are not
+protected) are shared with the genre.

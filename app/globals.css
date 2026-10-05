@@ -1,26 +1,1140 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-table: #d7c4a3;
+  --color-surface: #fbf6ec;
+  --color-ivory: #f7f0e2;
+  --color-gold: #b58a32;
+  --color-ruby: #e23b44;
+  --color-sapphire: #3d8bdb;
+  --color-emerald: #3cb371;
+  --color-amber: #e8b84a;
+  --color-onyx: #2a2826;
+  --color-pearl: #f7f1e4;
+  --color-royal: #e0b43c;
+  --font-display: var(--font-cinzel);
+  --font-numeral: var(--font-playfair);
+  --font-sans: var(--font-source);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Not inlined: dark panels redefine --color-ink so every text-ink utility inside
+   them turns light without touching each component. */
+@theme {
+  --color-ink: #2a241c;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+/* ---------- Themes (Settings → Theme; set on <html data-theme>) ---------- */
+
+:root,
+:root[data-theme="charcoal"] {
+  --table-1: #26282d;
+  --table-2: #1c1e22;
+  --table-3: #141518;
+  --lamp: rgba(255, 214, 160, 0.05);
+  --felt-1: rgba(34, 52, 46, 0.94);
+  --felt-2: rgba(27, 42, 37, 0.96);
+  --panel-1: #2a2c31;
+  --panel-2: #222428;
+  --line: rgba(214, 200, 170, 0.16);
+  --header-bg: rgba(20, 21, 24, 0.9);
+}
+
+:root[data-theme="walnut"] {
+  --table-1: #33281f;
+  --table-2: #261d16;
+  --table-3: #19130e;
+  --lamp: rgba(255, 200, 140, 0.06);
+  --felt-1: rgba(64, 38, 34, 0.94);
+  --felt-2: rgba(50, 29, 26, 0.96);
+  --panel-1: #342a21;
+  --panel-2: #2a2119;
+  --line: rgba(222, 196, 150, 0.18);
+  --header-bg: rgba(26, 19, 14, 0.9);
+}
+
+:root[data-theme="forest"] {
+  --table-1: #212d28;
+  --table-2: #19231f;
+  --table-3: #111814;
+  --lamp: rgba(220, 240, 200, 0.04);
+  --felt-1: rgba(30, 60, 47, 0.94);
+  --felt-2: rgba(24, 47, 37, 0.96);
+  --panel-1: #24312b;
+  --panel-2: #1d2823;
+  --line: rgba(200, 214, 180, 0.16);
+  --header-bg: rgba(17, 24, 20, 0.9);
+}
+
+/* Privacy: near-black, low contrast and greyed out. Readable up close and head-on,
+   but washes out for anyone looking from a distance or an angle. */
+:root[data-theme="privacy"] {
+  --table-1: #0b0b0c;
+  --table-2: #080809;
+  --table-3: #050506;
+  --lamp: transparent;
+  --felt-1: rgba(17, 20, 19, 0.97);
+  --felt-2: rgba(13, 15, 14, 0.98);
+  --panel-1: #121315;
+  --panel-2: #0e0f10;
+  --line: rgba(255, 255, 255, 0.06);
+  --header-bg: rgba(6, 6, 7, 0.95);
+  --pg-center: 0.5;
+  --pg-edge: 0.78;
+  --pg-contrast: 0.75;
+  --pg-bright: 1;
+  /* Card pictures and small card piles, dimmed on top of the glass. */
+  --pg-art: 0.5;
+  --pg-pile: 0.7;
+}
+
+:root[data-theme="privacy"][data-privacy="1"] {
+  --pg-center: 0.35;
+  --pg-edge: 0.62;
+  --pg-contrast: 0.85;
+  --pg-bright: 1;
+  --pg-art: 0.68;
+  --pg-pile: 0.82;
+}
+
+:root[data-theme="privacy"][data-privacy="3"] {
+  /* Max: barely readable even head-on in a dim room; invisible from across it. */
+  --pg-center: 0.74;
+  --pg-edge: 0.96;
+  --pg-contrast: 0.5;
+  --pg-bright: 0.75;
+  --pg-art: 0.3;
+  --pg-pile: 0.5;
+}
+
+/* A dark filter over the whole screen; clicks pass straight through it. The
+   edges are darker than the centre, like a privacy screen seen off-axis. */
+.privacy-glass {
+  display: none;
+}
+
+:root[data-theme="privacy"] .privacy-glass {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 70% 65% at 50% 50%,
+    rgba(0, 0, 0, var(--pg-center)),
+    rgba(0, 0, 0, var(--pg-edge))
+  );
+  -webkit-backdrop-filter: saturate(0.3) contrast(var(--pg-contrast)) brightness(var(--pg-bright));
+  backdrop-filter: saturate(0.3) contrast(var(--pg-contrast)) brightness(var(--pg-bright));
+}
+
+/* Pages scroll normally; the game board sizes itself to the viewport (h-dvh). */
+body {
+  overflow-x: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--table-3);
+  color: #2a241c;
+  font-family: var(--font-source), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-cinzel), ui-serif, Georgia, serif;
+}
+
+.font-numeral {
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+}
+
+/* Every screen sits on the same dark walnut table as the game board. */
+/* Low-saturation, low-glare colours: long sessions should be easy on the eyes. */
+.tabletop,
+.table-dark {
+  color: #e9e3d6;
+  background:
+    /* a soft pool of lamp light over the middle of the table */
+    radial-gradient(ellipse 70% 60% at 50% 42%, var(--lamp), transparent 70%),
+    radial-gradient(ellipse at 50% 45%, var(--table-1) 0%, var(--table-2) 50%, var(--table-3) 100%);
+  background-color: var(--table-2);
+}
+
+/* ---------- Game table ---------- */
+
+.game-board {
+  /* Vertical space not available to the market (header, action rail, padding). */
+  --chrome-h: 9.5rem;
+  /* Market ≈ a row of nobles (0.52) + 3 rows of cards + gaps → 4 card heights tall,
+     and deck + 4 cards + gaps → 4 card heights wide. */
+  /* --fit-card-h is measured in JS (useFitBoard); the clamp is the pre-hydration fallback. */
+  --card-h: var(
+    --fit-card-h,
+    clamp(3.5rem, min(calc((100dvh - var(--chrome-h)) / 4), calc((100vw - 31rem) / 4)), 15rem)
+  );
+  --card-w: calc(var(--card-h) * 0.7);
+  --deck-w: calc(var(--card-w) * 0.86);
+  --card-gap: clamp(0.5rem, calc(var(--card-h) * 0.085), 1.15rem);
+  --noble-size: calc(var(--card-h) * 0.52);
+  --chip-size: clamp(2.6rem, calc(var(--card-h) * 0.34), 4.4rem);
+  display: grid;
+  grid-template-rows: 3.2rem minmax(0, 1fr) auto auto;
+  isolation: isolate;
+}
+
+.zone {
+  min-width: 0;
+  min-height: 0;
+}
+
+.zone-main {
+  z-index: 1;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(20rem, 1.2fr) auto minmax(7rem, 1fr);
+  align-items: center;
+  gap: 1.75rem;
+  padding: 0.6rem 1.25rem;
+}
+
+/* Left column: opponents on top (scrolling when there are several), your own
+   panel pinned underneath. */
+.zone-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  justify-self: end;
+  width: min(100%, 21rem);
+  max-height: 100%;
+  min-height: 0;
+  /* Room for the active seat's glowing ring, which sits just outside its panel. */
+  padding: 4px;
+}
+
+.side-opponents {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: -4px;
+  padding: 4px;
+  /* Thin but visible, so extra opponents below the fold are discoverable. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(205, 185, 140, 0.35) transparent;
+}
+
+/* Several opponents: smaller pieces so more of them fit above your panel. */
+.seat-compact {
+  --opp-card-h: 1.7rem;
+  --opp-card-w: 1.35rem;
+  --opp-chip: 1.55rem;
+  --opp-mini-h: 2.4rem;
+  --opp-mini-w: 1.8rem;
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+}
+
+.seat-compact .score-track {
+  display: none;
+}
+
+/* Your panel in the left column: pieces sized to fit its width. */
+.seat-side {
+  --seat-chip: 2.3rem;
+  --seat-card-w: 3.7rem;
+  --seat-pile-w: 2.65rem;
+}
+
+.zone-bank-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  justify-self: start;
+}
+
+.bank {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--bank-rows, 6), auto);
+  align-items: end;
+  justify-items: center;
+  /* Scale with the chips so stacks and their count badges never touch. */
+  row-gap: calc(var(--chip-size, 4.2rem) * 0.3);
+  column-gap: calc(var(--chip-size, 4.2rem) * 0.45);
+}
+
+/* Felt mat under the market, framing the cards like a real play area. */
+.play-mat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--card-gap);
+  padding: calc(var(--card-gap) * 1.1) calc(var(--card-gap) * 1.6);
+  border-radius: 1.1rem;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.04), transparent 65%),
+    linear-gradient(var(--felt-1), var(--felt-2)),
+    url("/art/table-cloth.webp") center / 420px;
+  box-shadow:
+    0 0 0 1px rgba(214, 190, 140, 0.28),
+    0 18px 40px rgba(0, 0, 0, 0.45),
+    inset 0 8px 28px rgba(0, 0, 0, 0.3);
+}
+
+.zone-rail {
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Fixed height so switching between action modes never shifts the board. */
+  height: 4.6rem;
+  padding: 0.15rem 1rem 0.3rem;
+}
+
+.zone-player {
+  z-index: 2;
+  padding: 0.1rem 1rem 0.55rem;
+}
+
+/*
+ * Stacked layout for phones and upright tablets (keep in sync with STACKED_QUERY
+ * in hooks/useFitBoard.ts): opponents on top, market, bank as a row below.
+ */
+@media (max-width: 900px), (max-aspect-ratio: 1/1) {
+  .zone-main {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
+    align-content: center;
+    justify-items: center;
+    gap: 1rem;
+  }
+
+  .zone-side {
+    flex-direction: row;
+    justify-self: stretch;
+    justify-content: center;
+    width: auto;
+    max-width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+
+  .side-opponents {
+    display: contents;
+  }
+
+  .side-opponents > * {
+    flex: 0 0 min(19rem, 86vw);
+  }
+
+  /* Centre the row when it fits, but keep the first panel reachable when it
+     overflows (justify-content: center would push it off the scroll start). */
+  .zone-side {
+    justify-content: flex-start;
+  }
+
+  .side-opponents > :first-child {
+    margin-left: auto;
+  }
+
+  .side-opponents > :last-child {
+    margin-right: auto;
+  }
+
+  .zone-bank-col {
+    flex-direction: column;
+    gap: 0.35rem;
+    justify-self: center;
+  }
+
+  .bank {
+    grid-template-rows: auto;
+    column-gap: calc(var(--chip-size, 2.6rem) * 0.32);
+  }
+
+  .zone-player .player-plaque {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.75rem;
+  }
+}
+
+/* Upright tablets that can't fit everything at a readable size (set by useFitBoard). */
+.game-board[data-scroll] {
+  height: auto;
+  min-height: 100dvh;
+  overflow: visible;
+  grid-template-rows: 3.2rem auto auto auto;
+}
+
+.game-board[data-scroll] .zone-main {
+  overflow: visible;
+}
+
+/* Phones: let the table scroll rather than shrinking cards to nothing. */
+@media (max-width: 640px) {
+  .game-board {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+    grid-template-rows: 3.2rem auto auto auto;
+  }
+
+  .zone-main {
+    overflow: visible;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .zone-rail {
+    height: auto;
+    min-height: 4.6rem;
+    padding: 0.5rem;
+  }
+
+  .zone-rail > div {
+    max-width: 100%;
+  }
+
+  .zone-rail .action-rail {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .zone-player {
+    padding: 0.25rem 0.5rem 0.75rem;
+  }
+}
+
+/* In the components layer so colour utilities (warnings, "ready" greens) still win. */
+@layer components {
+  .zone-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: rgba(42, 36, 28, 0.75);
+    font-weight: 700;
+  }
+
+  .seat-plaque .zone-label,
+  .player-plaque .zone-label,
+  .action-rail .zone-label,
+  .zone-label-light {
+    color: #cdb98c;
+  }
+}
+
+/* ---------- Cards ---------- */
+
+.card-shadow {
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.25),
+    0 6px 12px rgba(0, 0, 0, 0.35);
+}
+
+.card-lift {
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 180ms ease;
+}
+
+@media (hover: hover) {
+  .card-lift:hover {
+    transform: translateY(-5px);
+    box-shadow:
+      0 2px 2px rgba(0, 0, 0, 0.2),
+      0 16px 26px rgba(0, 0, 0, 0.45);
+  }
+}
+
+.card-lift:active {
+  transform: translateY(-2px);
+  transition-duration: 80ms;
+}
+
+.card-affordable {
+  box-shadow:
+    0 0 0 2px rgba(222, 196, 130, 0.9),
+    0 0 10px 1px rgba(222, 196, 130, 0.25),
+    0 6px 12px rgba(0, 0, 0, 0.35);
+}
+
+.card-selected,
+.card-selected:hover {
+  box-shadow:
+    0 0 0 3px #dcc48a,
+    0 0 12px 2px rgba(222, 196, 130, 0.3),
+    0 18px 28px rgba(0, 0, 0, 0.5);
+}
+
+.card-selected:not(.card-tilt),
+.card-selected:not(.card-tilt):hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 0 0 3px #dcc48a,
+    0 0 12px 2px rgba(222, 196, 130, 0.3),
+    0 18px 28px rgba(0, 0, 0, 0.5);
+}
+
+/* Frosted strip at the top of a card holding points and bonus gem. */
+.card-band {
+  background: linear-gradient(180deg, rgba(246, 240, 228, 0.86), rgba(240, 232, 216, 0.7));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35), 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.noble-strip {
+  background: linear-gradient(90deg, rgba(244, 238, 226, 0.86), rgba(240, 232, 216, 0.7));
+  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.6), 2px 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.points-numeral {
+  color: #fffdf8;
+  -webkit-text-stroke: 0.13em #2a241c;
+  paint-order: stroke fill;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+}
+
+.gem-disc-dark {
+  color: #fffdf8;
+  text-shadow:
+    0 0 2px rgba(0, 0, 0, 0.9),
+    0 1px 1px rgba(0, 0, 0, 0.9);
+}
+
+.gem-disc-light {
+  color: #1a1814;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.deck-pile {
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (hover: hover) {
+  .deck-pile:hover {
+    transform: translate(2px, -3px);
+  }
+}
+
+.deck-logo {
+  color: #fdf3d6;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 1px #3a2410,
+    0 1px 2px rgba(0, 0, 0, 0.9),
+    0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- Gem chips ---------- */
+
+.chip-stack {
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.chip-layer:first-child {
+  box-shadow:
+    0 5px 8px rgba(0, 0, 0, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.chip-layer {
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.chip-face {
+  /* Slight overshoot, like a chip lifted off the stack. */
+  transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+@media (hover: hover) {
+  .chip-interactive:hover {
+    transform: translateY(-3px);
+  }
+}
+
+.chip-interactive:active {
+  transform: translateY(1px);
+}
+
+.chip-selected .chip-face {
+  transform: translateY(-14px) rotate(-6deg);
+  box-shadow:
+    0 0 0 2px #dcc48a,
+    0 0 8px 2px rgba(222, 196, 130, 0.35);
+}
+
+/* No gems of this colour: an engraved empty slot instead of a ghost chip. */
+.chip-slot {
+  background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3));
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.45),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  border: 1.5px dashed rgba(214, 200, 170, 0.2);
+}
+
+.table-dark .zone-bank-col .chip-slot {
+  background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.25));
+  border-color: rgba(243, 234, 216, 0.25);
+}
+
+/* ---------- Panels ---------- */
+
+.seat-plaque,
+.player-plaque,
+.action-rail {
+  --color-ink: #e9e3d6;
+  color: #e9e3d6;
+  background: linear-gradient(180deg, var(--panel-1), var(--panel-2));
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 0 0 1px var(--line);
+}
+
+/* The player panels draw their chips, card piles and reserved cards larger than the
+   compact defaults, so counts read at a glance. */
+.seat-large {
+  --seat-chip: 3.3rem;
+  --seat-card-w: 4.6rem;
+  --seat-pile-w: 3.5rem;
+}
+
+/* Mid-size screens: shrink the player's pieces before the plaque has to wrap. */
+@media (max-width: 1280px) {
+  .seat-large {
+    --seat-chip: 2.75rem;
+    --seat-card-w: 3.8rem;
+    --seat-pile-w: 3rem;
+    --plaque-gap: 1.25rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  .seat-large {
+    --seat-chip: 2.4rem;
+    --seat-card-w: 3.3rem;
+    --seat-pile-w: 2.65rem;
+    --plaque-gap: 1rem;
+  }
+}
+
+@layer components {
+  .seat-large .zone-label {
+    font-size: 0.82rem;
+  }
+}
+
+.seat-active {
+  box-shadow:
+    0 0 0 2px rgba(222, 196, 130, 0.75),
+    0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.bonus-pile {
+  transition: transform 160ms ease;
+}
+
+@media (hover: hover) {
+  .bonus-pile:not(:disabled):hover {
+    transform: translateY(-3px);
+  }
+}
+
+.gold-rule {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(181, 138, 50, 0.75),
+    transparent
+  );
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #dcc48a;
+  outline-offset: 3px;
+}
+
+.card-art-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-lift,
+  .chip-stack,
+  .chip-face,
+  .deck-pile,
+  .bonus-pile {
+    transition: none;
+  }
+}
+
+.gold-glow {
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.turn-glow {
+  text-shadow: none;
+}
+
+.turn-ribbon {
+  min-width: min(26rem, 90vw);
+  border-radius: 0.6rem;
+  background: linear-gradient(180deg, var(--panel-1), var(--panel-2));
+  box-shadow:
+    0 0 0 1px rgba(214, 200, 170, 0.3),
+    0 12px 30px rgba(0, 0, 0, 0.55);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Noble the viewer is one or two cards away from. */
+.noble-close {
+  box-shadow: 0 0 0 2px rgba(222, 196, 130, 0.85), 0 6px 12px rgba(0, 0, 0, 0.35);
+}
+
+.score-track {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(214, 200, 170, 0.15);
+  overflow: hidden;
+}
+
+.score-fill {
+  position: relative;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #a98a4c, #d6bd85);
+  transition: width 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .noble-close {
+    animation: none;
+  }
+}
+
+/* Short windows (small laptops): shrink the chrome so the cards keep their room. */
+@media (max-height: 760px) and (min-width: 901px) {
+  .game-board {
+    grid-template-rows: 2.9rem minmax(0, 1fr) auto auto;
+  }
+
+  .zone-rail {
+    height: 3.5rem;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .zone-player {
+    padding-bottom: 0.35rem;
+  }
+
+  .player-plaque,
+  .zone-rail > div {
+    zoom: 0.84;
+  }
+
+  .zone-side {
+    zoom: 0.86;
+    gap: 0.45rem;
+  }
+}
+
+/* ---------- Menus, lobby, rules ---------- */
+
+.gold-title {
+  background: linear-gradient(180deg, #f3e6c4 0%, #d9c088 50%, #a98a4c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(20, 16, 10, 0.6));
+}
+
+.kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: rgba(214, 192, 140, 0.8);
+  text-transform: uppercase;
+}
+
+.parchment {
+  color: #2a241c;
+  background:
+    linear-gradient(180deg, #ece6da, #e0d8c8);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(150, 130, 90, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.field {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(42, 36, 28, 0.18);
+  background: rgba(255, 255, 255, 0.65);
+  padding: 0.6rem 0.9rem;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.field:focus {
+  outline: none;
+  border-color: #b58a32;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.08),
+    0 0 0 3px rgba(240, 200, 100, 0.35);
+}
+
+.choice-tile {
+  border-radius: 0.6rem;
+  border: 1.5px solid rgba(42, 36, 28, 0.14);
+  background: rgba(255, 255, 255, 0.5);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+@media (hover: hover) {
+  .choice-tile:hover {
+    transform: translateY(-2px);
+    border-color: rgba(181, 138, 50, 0.6);
+  }
+}
+
+.choice-tile[aria-pressed="true"] {
+  border-color: #b58a32;
+  background: linear-gradient(180deg, #fff8e6, #f6e7c2);
+  box-shadow:
+    0 0 0 3px rgba(240, 200, 100, 0.35),
+    0 6px 14px rgba(120, 80, 20, 0.2);
+}
+
+.code-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 3.2rem;
+  border-radius: 0.45rem;
+  font-family: var(--font-cinzel), ui-serif, Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #2a241c;
+  background: linear-gradient(180deg, #ffffff, #efe4cc);
+  box-shadow:
+    0 0 0 1px rgba(181, 138, 50, 0.45),
+    0 4px 8px rgba(0, 0, 0, 0.18),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+}
+
+.status-pill {
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float-slow {
+    animation: none;
+  }
+}
+
+.waiting-dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.waiting-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #b8a273;
+  animation: waiting-dot 1.2s ease-in-out infinite;
+}
+
+.waiting-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.waiting-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes waiting-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waiting-dots span {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+.final-round {
+  color: #2a1a05;
+  background: linear-gradient(180deg, #ffd27a, #e0932c);
+  box-shadow: 0 0 12px rgba(255, 170, 60, 0.6);
+  animation: final-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes final-pulse {
+  50% {
+    box-shadow: 0 0 20px rgba(255, 170, 60, 0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .final-round {
+    animation: none;
+  }
+}
+
+/* ---------- Table life: motion that makes the pieces feel physical ---------- */
+
+/* Cards tilt toward the cursor and catch the lamp light (vars set in DevelopmentCard). */
+.card-tilt {
+  transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))
+    translateY(var(--lift, 0px)) scale(var(--zoom, 1));
+  transform-style: preserve-3d;
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 220ms ease;
+  will-change: transform;
+}
+
+.card-tilt.card-selected {
+  --lift: -10px;
+  --zoom: 1.04;
+}
+
+@media (hover: hover) {
+  .card-tilt:hover {
+    --lift: -8px;
+    --zoom: 1.05;
+    transition-duration: 90ms;
+    box-shadow:
+      0 2px 2px rgba(0, 0, 0, 0.2),
+      0 22px 34px rgba(0, 0, 0, 0.55);
+  }
+}
+
+.card-sheen {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  opacity: 0;
+  background: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 30%),
+    rgba(255, 255, 255, 0.45),
+    rgba(255, 255, 255, 0.08) 35%,
+    transparent 60%
+  );
+  mix-blend-mode: soft-light;
+  transition: opacity 200ms ease;
+}
+
+.card-tilt:hover .card-sheen {
+  opacity: 1;
+}
+
+/* Counts that just changed pop, so you see what moved. */
+.count-pop {
+  display: inline-block;
+}
+
+/* Nobles sit in a row on top of the market, inside the mat. */
+.noble-rail {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: var(--card-gap);
+}
+
+.market-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap);
+}
+
+@media (max-width: 900px), (max-aspect-ratio: 1/1) {
+  .noble-rail {
+    --noble-size: calc(var(--card-h) * 0.72);
+  }
+}
+
+/* The OS asks for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  .card-tilt {
+    transition: none;
+  }
+}
+
+/* Gold sits a little apart from the five gem piles. */
+.bank > :last-child {
+  margin-top: calc(var(--chip-size, 4rem) * 0.35);
+}
+
+@media (max-width: 900px), (max-aspect-ratio: 1/1) {
+  .bank > :last-child {
+    margin-top: 0;
+    margin-left: calc(var(--chip-size, 2.6rem) * 0.45);
+  }
+}
+
+.game-header {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Fills under the logo while the hidden hint gesture is held. */
+.hint-hold {
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 0;
+  background: rgba(214, 196, 150, 0.45);
+  pointer-events: none;
+}
+
+.hint-hold-on {
+  width: 100%;
+  transition: width var(--hold-ms, 1000ms) linear;
+}
+
+/* Privacy: the light parchment panels would glow from across the room. */
+:root[data-theme="privacy"] .parchment {
+  --color-ink: #b4ad9f;
+  color: #b4ad9f;
+  background: linear-gradient(180deg, #151618, #101113);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+:root[data-theme="privacy"] .field,
+:root[data-theme="privacy"] .choice-tile,
+:root[data-theme="privacy"] .code-tile {
+  color: #b4ad9f;
+  background: #0c0d0e;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="privacy"] .btn-ivory {
+  color: #b4ad9f;
+  background: #17181b;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Privacy: cards were the brightest things left on the table. Ivory frames,
+   frosted bands and pile edges turn charcoal, and the pictures are dimmed by
+   level so Max leaves only the numbers faintly readable head-on. */
+:root[data-theme="privacy"] {
+  --card-edge-a: #1f2023;
+  --card-edge-b: #141517;
+}
+
+:root[data-theme="privacy"] .card-face,
+:root[data-theme="privacy"] .noble-card,
+:root[data-theme="privacy"] .deck-pile,
+:root[data-theme="privacy"] .bonus-pile:not(:disabled),
+:root[data-theme="privacy"] .mini-card {
+  border-color: #26272b;
+  background-color: #0c0d0e;
+}
+
+:root[data-theme="privacy"] .card-art {
+  filter: brightness(var(--pg-art)) saturate(0.6);
+}
+
+:root[data-theme="privacy"] .deck-pile,
+:root[data-theme="privacy"] .bonus-pile:not(:disabled),
+:root[data-theme="privacy"] .mini-card {
+  filter: brightness(var(--pg-pile)) saturate(0.6);
+}
+
+:root[data-theme="privacy"] .card-band,
+:root[data-theme="privacy"] .noble-strip {
+  background: linear-gradient(180deg, rgba(12, 13, 15, 0.88), rgba(12, 13, 15, 0.72));
+  box-shadow: none;
+}
+
+:root[data-theme="privacy"] .points-numeral {
+  color: #a49d90;
+  -webkit-text-stroke-color: #050506;
+  text-shadow: none;
+}
+
+:root[data-theme="privacy"] .card-band img {
+  filter: brightness(var(--pg-art)) saturate(0.7);
+}
+
+/* Prices are the one thing you must read: they keep full strength, minus the
+   bright white rim that would glow from across the room. */
+:root[data-theme="privacy"] .card-face .gem-disc,
+:root[data-theme="privacy"] .noble-card .gem-disc {
+  filter: saturate(0.8);
+  outline: 2px solid #3a3b40;
+}
+
+:root[data-theme="privacy"] .card-sheen {
+  display: none;
+}
+
+/* Translucent white wells inside panels (practice box, lobby seats, results). */
+:root[data-theme="privacy"] .parchment [class*="bg-white/"],
+:root[data-theme="privacy"] .parchment [class*="bg-white/"]:hover {
+  background: rgba(255, 255, 255, 0.04);
 }
