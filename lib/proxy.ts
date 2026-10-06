@@ -2,7 +2,7 @@ export async function proxyWs(
   path: string,
   init: RequestInit,
 ): Promise<Response> {
-  const base = process.env.WS_INTERNAL_URL ?? "http://127.0.0.1:3001";
+  const base = process.env.WS_URL ?? "http://127.0.0.1:3001";
   try {
     return await fetch(`${base}${path}`, {
       ...init,
