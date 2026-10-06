@@ -17,9 +17,8 @@ services:
       HOSTNAME: 0.0.0.0
       PORT: "3100"
       NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3100}
-      API_URL: ${API_URL:-http://localhost:3001/}
-      WS_URL: ${WS_URL:-ws://localhost:3001/ws}
-      WS_INTERNAL_URL: http://ws:3001
+      NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL:-ws://localhost:3001/ws}
+      API_URL: http://ws:3001
       SESSION_SECRET: ${SESSION_SECRET:-change-this-to-a-long-random-string}
       MONGODB_URI: ${MONGODB_URI:-mongodb://mongo:27017/splendor}
     depends_on:

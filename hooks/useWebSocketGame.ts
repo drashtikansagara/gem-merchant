@@ -191,7 +191,7 @@ const LOOPBACK = new Set(["localhost", "127.0.0.1", "[::1]"]);
  * page was actually loaded from, keeping the configured port and path.
  */
 function gameServerUrl(): string {
-  const configured = process.env.API_URL ?? "ws://localhost:3001/ws";
+  const configured = process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:3001/ws";
   try {
     const url = new URL(configured);
     const pageHost = window.location.hostname;

@@ -70,7 +70,7 @@ Check it works: `https://YOUR-WS-DOMAIN/health` should return `{"ok":true}`.
    | --- | --- |
    | `SESSION_SECRET` | the **same** secret as the game server |
    | `NEXT_PUBLIC_WS_URL` | `wss://YOUR-WS-DOMAIN/ws` |
-   | `WS_INTERNAL_URL` | `https://YOUR-WS-DOMAIN` |
+   | `API_URL` | `https://YOUR-WS-DOMAIN` (no trailing slash) |
    | `NEXT_PUBLIC_APP_URL` | your Vercel URL, e.g. `https://gem-merchant.vercel.app` |
 
    The website never talks to MongoDB directly, so it doesn't need `MONGODB_URI`.
